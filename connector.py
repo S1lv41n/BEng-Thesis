@@ -13,9 +13,12 @@ cursor.execute("select database();")
 record = cursor.fetchone()
 print("Połączyłeś się z bazą:", record)
 
-action = input("Co chcesz zrobić?\n 1. Wyświetl bazę\n 2. Dodaj rekord \n 3. Usuń rekord\n 4. Edytuj rekord\n")
+action = input("""Co chcesz zrobić?\n 
+1. Wyświetl bazę 
+2. Dodaj rekord  
+3. Usuń rekord 
+4. Edytuj rekord\n""")
 
-#TODO Display whole table
 if action == "1":
     query = ("SELECT * FROM produkty")
     cursor.execute(query)
@@ -67,4 +70,35 @@ if action == "3":
         cursor.close()
         print ("Rekord nie został usunięty")
 
-#TODO Add an option to update record chosen by prod_id
+if action == "4":
+    prod_id = (input("prod_id: "), )
+    print("Wyświetlam obecne wartości przed ich edytowaniem: ")
+    sql_select_record = """SELECT * 
+                        FROM produkty 
+                        WHERE prod_id = %s"""
+    cursor.execute(sql_select_record, prod_id)
+    record = cursor.fetchall()
+    print(record)
+    
+    confirmation = input("Czy napewno chcesz edytować ten rekord? y/n \n")
+    
+    if confirmation == "y":
+        print("Podaj nowe wartości rekordu: \n")
+        prod_id = input("prod_id: ")
+        nazwa = input("nazwa: ")
+        ilosc = input("ilosc: ")
+        dane = (nazwa, ilosc, prod_id)   
+        sql_update_record = ("""UPDATE produkty 
+                            SET nazwa = %s, ilosc = %s 
+                            WHERE prod_id = %s""")
+        cursor.execute(sql_update_record, (nazwa, ilosc, prod_id))
+        connection.commit()
+        cursor.close()  
+        print("Rekord został pomyślnie edytowany")
+        
+    if confirmation == "n":
+        cursor.close()
+        print ("Rekord nie został edytowany")
+
+else:
+    print("Wybierz poprawną instrukcję")
