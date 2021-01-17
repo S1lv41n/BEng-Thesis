@@ -13,9 +13,24 @@ cursor.execute("select database();")
 record = cursor.fetchone()
 print("Połączyłeś się z bazą:", record)
 
-action = input("Co chcesz zrobić? \n 1. Dodaj rekord \n 2. Usuń rekord\n")
+action = input("Co chcesz zrobić?\n 1. Wyświetl bazę\n 2. Dodaj rekord \n 3. Usuń rekord\n 4. Edytuj rekord\n")
 
+#TODO Display whole table
 if action == "1":
+    query = ("SELECT * FROM produkty")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    result = len(rows)
+    if result > 0:
+        x = 0
+        for row in rows:
+            row = rows[x]
+            prod_id, nazwa, ilosc = row[0], row[0], row[0]
+            print (row)
+            x = x + 1
+        cursor.close()
+
+if action == "2":
     #TODO Add new columns in 'produkty' table
     #TODO prod_id by auto_increment
     prod_id = input("prod_id: ")
@@ -27,10 +42,13 @@ if action == "1":
     print("Rekord został pomyślnie dodany do tabeli Produkty")
     cursor.close()
 
-if action == "2":
+
+if action == "3":
     prod_id = (input("prod_id: "), )
     print("Wyświetlam obecne wartości przed ich usunięciem: ")
-    sql_select_record = """SELECT * FROM produkty WHERE prod_id = %s"""
+    sql_select_record = """SELECT * 
+                        FROM produkty 
+                        WHERE prod_id = %s"""
     cursor.execute(sql_select_record, prod_id)
     record = cursor.fetchall()
     print(record)
@@ -38,12 +56,15 @@ if action == "2":
     confirmation = input("Czy napewno chcesz usunąć ten rekord? y/n \n")
     
     if confirmation == "y":
-        sql_delete_record = """DELETE from produkty WHERE prod_id = %s"""
+        sql_delete_record = """DELETE from produkty 
+                            WHERE prod_id = %s"""
         cursor.execute(sql_delete_record, prod_id)
         connection.commit()
         cursor.close()
         print("Rekord został pomyślnie usunięty")
         
     if confirmation == "n":
-        print ("Rekord nie został usunięty")
         cursor.close()
+        print ("Rekord nie został usunięty")
+
+#TODO Add an option to update record chosen by prod_id
