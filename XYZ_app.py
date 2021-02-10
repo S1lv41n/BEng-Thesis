@@ -11,47 +11,48 @@ cursor = connection.cursor()
 
 def main():    
     mainMenuInput = mainMenu()
-    if mainMenuInput == 1:
+    if mainMenuInput == '1':
         menuProdukty()
         
-    elif mainMenuInput == 2:
+    elif mainMenuInput == '2':
         menuPracownicy()
         
-    elif mainMenuInput == 3:
+    elif mainMenuInput == '3':
         menuMagazyn()
         
     else:
         print("\nWybierz poprawną opcję\n")
-        main()
+
+    main()
 
 
 def welcome():
     print ("Witamy w aplikacji XYZ")
     db_info = connection.get_server_info()
-    print("Connected to MySQL Server version ", db_info)
+    print("Wersja serwera MySQL ", db_info)
     cursor.execute("select database();")
     record = cursor.fetchone()
 
 
 def mainMenu():
-    mainMenuInput = int(input("""Wybierz rejestr:\n 1. Rejestr produktów\n 2. Rejestr pracowników\n 3. Rejestr magazynowy\n 0. Wyjście z programu\n"""))
-    if mainMenuInput == 0:
+    mainMenuInput = input("""Wybierz rejestr:\n 1. Obsługa rejestru produktów\n 2. Zarządzanie pracownikami\n 3. Zarządzanie stanami magazynowymi\n 0. Wyjście z programu\n\n--> """)
+    if mainMenuInput == '0':
         print("\nZakończone pracę z programem")
         sys.exit()
     return mainMenuInput
 
 def menuProdukty():
-    menuProduktyInput = int(input("""Wybierz akcję:\n 1. Wyświetlenie tabeli produktów\n 2. Dodawanie produkt\n 3. Edycja produkt\n 0. Wstecz\n"""))
-    if menuProduktyInput == 0:
-        mainMenu()
+    menuProduktyInput = input("""Wybierz akcję:\n 1. Wyświetl wszystkie produkty w bazie\n 2. Dodaj produkt\n 3. Edytuj produkt\n 0. Wstecz\n\n--> """)
+    if menuProduktyInput == '0':
+        main()
         
-    elif menuProduktyInput == 1:
+    elif menuProduktyInput == '1':
         print("\n\n")
         query = ("SELECT prod_id, nazwa, norma, skladowe, jm, prog_bezpieczny FROM produkty")
         cursor.execute(query)
         rows = cursor.fetchall()
         result = len(rows)
-        print ("PROD_ID  NAZWA  NORMA/H   SKŁADOWE   JM   PRÓG BEZPIECZNY")
+        print ("ID  NAZWA  NORMA/H   SKŁADOWE   JM   PRÓG BEZPIECZNY")
         if result > 0:
             x = 0
             for row in rows:
@@ -62,7 +63,7 @@ def menuProdukty():
         print("\n\n")
         menuProdukty()
         
-    elif menuProduktyInput == 2:
+    elif menuProduktyInput == '2':
         #TODO Add new columns in 'produkty' table
         nazwa = input ("nazwa: ")
         norma = input ("norma: ")
@@ -75,23 +76,43 @@ def menuProdukty():
         print("Rekord został pomyślnie dodany do tabeli Produkty\n")
         
     else:
-        return menuProduktyInput
+        print("\nWybierz poprawną opcję\n")
+        return menuProdukty()
 
 def menuPracownicy():
-    menuPracownicyInput = int(input("""Wybierz akcję:\n 1. Wyświetlenie tabeli pracowników\n 2. Dodawanie pracownika\n 3. Edytuj pracownika\n 0. Wstecz\n"""))
-    if menuPracownicyInput == 0:
+    menuPracownicyInput = input("""\nWybierz akcję:\n 1. Wyświetl wszystkich pracowników\n 2. Dodaj pracownika\n 3. Edytuj pracownika\n 0. Wstecz\n\n--> """)
+    if menuPracownicyInput == '0':
         mainPracownicy()
         
+    elif menuPracownicyInput == '1':
+        print("\n\n")
+        query = ("SELECT * FROM pracownicy")
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        result = len(rows)
+        print ("ID   IMIĘ   NAZWISKO   CZAS PRACY   ZMIANA   OBECNE ZAMOWIENIE   ROLA")
+        if result > 0:
+            x = 0
+            for row in rows:
+                row = rows[x]
+                prod_id, nazwa, norma = row[0], row[0], row[0]
+                print (row)
+                x = x + 1
+        print("\n\n")
+        menuProdukty()
+        
     else:    
-        return menuPracownicyInput
+        print("\nWybierz poprawną opcję\n")
+        return menuPracownicy()
 
 def menuMagazyn():
-    menuMagazynInput = int(input("""Wybierz akcję:\n 1. Wyświetlenie stanów magazynowych\n 2. Dodawanie stanu magazynowego\n 3. Edycja stanu magazynowego\n 0. Wstecz\n"""))
-    if menuMagazynInput == 0:
+    menuMagazynInput = input("""\nWybierz akcję:\n 1. Wyświetlenie wszystkie stany magazynowe\n 2. Dodaj stan magazynowy\n 3. Edytuj stan magazynowy\n 0. Wstecz\n\n--> """)
+    if menuMagazynInput == '0':
         mainMagazyn()
         
     else:    
-        return menuMagazynInput
+        print("\nWybierz poprawną opcję\n")
+        return menuMagazyn()
 
 ##def program(action):
 ##    if action == 1:
