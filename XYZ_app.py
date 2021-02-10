@@ -65,11 +65,11 @@ def menuProdukty():
         
     elif menuProduktyInput == '2':
         #TODO Add new columns in 'produkty' table
-        nazwa = input ("nazwa: ")
-        norma = input ("norma: ")
-        skladowe = input ("skladowe: ")
-        jm = input ("jm: ")
-        prog_bezpieczny = input ("prog_bezpieczny: ")
+        nazwa = input ("nazwa:\n-->")
+        norma = input ("norma:\n-->")
+        skladowe = input ("skladowe:\n-->")
+        jm = input ("jm:\n-->")
+        prog_bezpieczny = input ("prog_bezpieczny:\n-->")
         mySql_insert_record = """INSERT INTO produkty (nazwa, norma, skladowe, jm, prog_bezpieczny)VALUES (%s, %s, %s, %s, %s)"""
         cursor.execute(mySql_insert_record, (nazwa,  norma, skladowe, jm, prog_bezpieczny), multi=True)
         connection.commit()
@@ -82,7 +82,7 @@ def menuProdukty():
 def menuPracownicy():
     menuPracownicyInput = input("""\nWybierz akcję:\n 1. Wyświetl wszystkich pracowników\n 2. Dodaj pracownika\n 3. Edytuj pracownika\n 0. Wstecz\n\n--> """)
     if menuPracownicyInput == '0':
-        mainPracownicy()
+        main()
         
     elif menuPracownicyInput == '1':
         print("\n\n")
@@ -101,6 +101,18 @@ def menuPracownicy():
         print("\n\n")
         menuProdukty()
         
+    elif menuProduktyInput == '2':
+        imie = input ("imię:\n-->")
+        nazwisko = input ("nazwisko:\n-->")
+        czas_pracy = input ("czas pracy:\n-->")
+        zmiana = input ("zmiana\n-->")
+        obecne_zamowienie = input ("obecne zamówienie:\n-->")
+        rola = input ("rola:\n-->")
+        mySql_insert_record = """INSERT INTO pracownicy (imie, nazwisko, czas_pracy, zmiana, obecne_zamowienie, rola)VALUES (%s, %s, %s, %s, %s, %s)"""
+        cursor.execute(mySql_insert_record, (imie, nazwisko, czas_pracy, zmiana, obecne_zamowienie, rola), multi=True)
+        connection.commit()
+        print("Rekord został pomyślnie dodany do tabeli Produkty\n")
+        
     else:    
         print("\nWybierz poprawną opcję\n")
         return menuPracownicy()
@@ -108,12 +120,31 @@ def menuPracownicy():
 def menuMagazyn():
     menuMagazynInput = input("""\nWybierz akcję:\n 1. Wyświetlenie wszystkie stany magazynowe\n 2. Dodaj stan magazynowy\n 3. Edytuj stan magazynowy\n 0. Wstecz\n\n--> """)
     if menuMagazynInput == '0':
-        mainMagazyn()
+        main()
         
+    elif menuMagazynInput == '1':
+        print("\n\n")
+        query = ("SELECT * FROM magazyn")
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        result = len(rows)
+        #TODO
+        print ("ID   IMIĘ   NAZWISKO   CZAS PRACY   ZMIANA   OBECNE ZAMOWIENIE   ROLA")
+        if result > 0:
+            x = 0
+            for row in rows:
+                row = rows[x]
+                prod_id, nazwa, norma = row[0], row[0], row[0]
+                print (row)
+                x = x + 1
+        print("\n\n")
+        menuProdukty()
+
     else:    
         print("\nWybierz poprawną opcję\n")
         return menuMagazyn()
-
+    
+#! SKŁADNIA JOIN
 ##def program(action):
 ##    if action == 1:
 ##        print("\n\n")
@@ -130,7 +161,8 @@ def menuMagazyn():
 ##                print (row)
 ##                x = x + 1
 ##        print("\n\n")
-#
+
+#! USUWANIE REKORDU
 #    if action == 3:
 #        prod_id = (input("prod_id: "), )
 #        print("Wyświetlam obecne wartości przed ich usunięciem: ")
@@ -152,8 +184,8 @@ def menuMagazyn():
 #            
 #        if confirmation == "n":
 #            print ("Rekord nie został usunięty\n")
-#
-#    #TODO Editing
+
+#TODO Editing
 #    if action == 4:
 #        prod_id = (input("prod_id: "), )
 #        print("Wyświetlam obecne wartości przed ich edytowaniem: ")
