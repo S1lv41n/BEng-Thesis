@@ -140,7 +140,6 @@ def handlowiecMenu():
         
     elif handlowiecMenuInput == "2":
         id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n"), )
-        print (id_zamowienie[0])
         print("Wyświetlam obecną datę realizacji zlecenia: \n")
         mySql_select_record = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
         cursor.execute(mySql_select_record, id_zamowienie)
@@ -151,8 +150,6 @@ def handlowiecMenu():
         selection = input("Potwierdzasz? t/n")
         if selection == "t":
             query = "UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s"
-#            dane = (new_date, id_zamowienie, )
-#            print (dane)
             cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
             
         elif selection == "n":
