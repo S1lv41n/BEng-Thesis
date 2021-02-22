@@ -23,8 +23,8 @@ def main():
     elif mainMenuInput == '4': #! DONE
         magazynierMenu()
         
-    elif mainMenuInput == '5':
-        menuPracownicy()
+    elif mainMenuInput == '5': #! DONE
+        kadrowyMenu()
         
     elif mainMenuInput == '6':
         menuMagazyn()       
@@ -608,8 +608,118 @@ def magazynierMenu():
 #*MAGAZYNIER
 
 #*KADROWY
+def kadrowyMenu():
+    kadrowyMenuInput = input("Wybierz opcję:\n 1. Wyświetl spis pracowników\n 2. Dodaj pracownika\n 3. Edytuj pracownika\n 4. Usuń pracownika\n 0. Wstecz\n\n--> ")
+    
+    if kadrowyMenuInput == "0":
+        mainMenu()
+        
+    elif kadrowyMenuInput == "1":
+        def kadrowyPracownicyMenu():
+            kadrowyPracownicyMenuInput = input("Wybierz opcję:\n 1. Sortuj: ID\n 2. Sortuj: Nazwisko\n 0. Wstecz\n\n--> ")
+            
+            if kadrowyPracownicyMenuInput == "0":
+                kadrowyMenu()
+                
+            elif kadrowyPracownicyMenuInput == "1":
+                print("\n\n")
+                query = ("SELECT * FROM pracownicy ORDER BY id_pracownik")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                kadrowyPracownicyMenu()
+                
+            elif kadrowyPracownicyMenuInput == "2":
+                print("\n\n")
+                query = ("SELECT * FROM pracownicy ORDER BY nazwisko")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                kadrowyPracownicyMenu()
+        kadrowyPracownicyMenu()
+        
+    elif kadrowyMenuInput == "2":
+        imie = input ("imie:\n-->")
+        nazwisko = input ("nazwisko:\n-->")
+        mySql_insert_record = """INSERT INTO pracownicy (imie, nazwisko)VALUES (%s, %s)"""
+        cursor.execute(mySql_insert_record, (imie, nazwisko), multi=True)
+        connection.commit()
+        print("Pracownik został pomyślnie dodany do spisu pracowników\n")
+        kadrowyMenu()
 
-
+    elif kadrowyMenuInput == "3":
+        id_pracownik = (input ("Podaj numer ID pracownika do edycji:\n"), )
+        print("Wyświetlam obecne dane pracownika:\n")
+        mySql_select_record = "SELECT * FROM pracownicy WHERE id_pracownik = %s"
+        cursor.execute(mySql_select_record, id_pracownik)
+        record = cursor.fetchall()
+        print(record[0])
+        confirmation = input("Czy napewno chcesz edytować tego pracownika? t/n \n")
+            
+        if confirmation == "t":
+            print("Podaj nowe dane pracownika: \n")
+            imie = input("imie: ")
+            nazwisko = input("nazwisko: ")
+            print (imie)
+            print (nazwisko)
+            mySql_update_record = ("""UPDATE pracownicy SET imie = %s, nazwisko = %s WHERE id_pracownik = %s""")
+            cursor.execute(mySql_update_record, (imie, nazwisko, id_pracownik[0]),multi = True)
+            connection.commit() 
+            print("Pracownik został pomyślnie edytowany\n")
+            kadrowyMenu()
+                
+        elif confirmation == "n":
+            print ("Pracownik nie został edytowany\n")
+            kadrowyMenu()
+        
+        else:
+            print ("Wybierz poprawną opcję")
+            kadrowyMenu()
+            
+    elif kadrowyMenuInput == "4":
+        id_pracownik = (input("Podaj ID pracownika do usunięcia: "), )
+        print("Wyświetlam informację o pracowniku przed jego usunięciem: ")
+        mySql_select_record = """SELECT * 
+                            FROM pracownicy
+                            WHERE id_pracownik = %s"""
+        cursor.execute(mySql_select_record, id_pracownik)
+        record = cursor.fetchall()
+        print(record)
+        confirmation = input("Czy napewno chcesz usunąć ten rekord? t/n \n")
+        
+        if confirmation == "t":
+            mySql_delete_record = """DELETE from pracownicy 
+                                WHERE id_pracownik = %s"""
+            cursor.execute(mySql_delete_record, id_pracownik)
+            connection.commit()
+            print("Pracownik został pomyślnie usunięty\n")
+            kadrowyMenu()
+            
+        elif confirmation == "n":
+            print ("Pracownik nie został usunięty\n")
+            kadrowyMenu()
+    
+        else:
+            print("Wybierz poprawną opcję")
+            kadrowyMenu()
+    
+    kadrowyMenu()    
+            
+    
 
 #*KADROWY
 
