@@ -10,18 +10,18 @@ cursor = connection.cursor()
 
 
 def main():    
-    mainMenuInput = mainMenu()
+    mainMenuInput = mainMenu() #! DONE
     if mainMenuInput == '1':
         handlowiecMenu()
         
-    elif mainMenuInput == '2':
+    elif mainMenuInput == '2': #! DONE
         kierownikMenu()
         
-    elif mainMenuInput == '3':
-        menuMagazyn()
+    elif mainMenuInput == '3': #TODO Aktualizacja postępów produkcji
+        brygadzistaMenu()
         
-    elif mainMenuInput == '4':
-        menuProdukty()
+    elif mainMenuInput == '4': #! DONE
+        magazynierMenu()
         
     elif mainMenuInput == '5':
         menuPracownicy()
@@ -43,11 +43,11 @@ def welcome():
     print("Wersja serwera MySQL:", db_info)
     cursor.execute("select database();")
     record = cursor.fetchone()
-    print ("\nWitaj w aplikacji Ghostsent.")
-    print ("Twoja rola to: Administrator\n")
+    print ("\nWitaj w aplikacji Ghostsent.\n\n")
 
 
 def mainMenu():
+    print ("Twoja rola to: Administrator\n")
     mainMenuInput = input("""Wybierz pracownika z którego roli chcesz skorzystać:\n 1. Handlowiec\n 2. Kierownik\n 3. Brygadzista\n 4. Magazynier\n 5. Kadrowy\n 6. Zarząd Firmy\n 7. Modyfikuj rolę pracownika\n 0. Wyjście z programu\n\n--> """)
     if mainMenuInput == '0':
         print("\nZakończono pracę z programem")
@@ -56,6 +56,7 @@ def mainMenu():
 
 #*HANDLOWIEC
 def handlowiecMenu():
+    print ("\n\nTwoja rola to: Handlowiec\n")
     handlowiecMenuInput = input ("""Wybierz akcję:\n 1. Wyświetl rejestr zleceń\n 2. Modyfikacja daty realizacji zlecenia\n 0. Wstecz\n\n--> """)
     if handlowiecMenuInput == "0":
         main()
@@ -139,12 +140,12 @@ def handlowiecMenu():
             handlowiecMenu()
             
         else:
-            print("Wybierz poprawną opcję")
-            
+            print("Wybierz poprawną opcję")            
 #*HANDLOWIEC
 
 #*KIEROWNIK
 def kierownikMenu():
+    print ("\n\nTwoja rola to: Kierownik\n")
     kierownikMenuInput = input ("""Wybierz akcję:\n 1. Rejestr zleceń\n 2. Rejestr produktów\n 0. Wstecz\n\n--> """)
     if kierownikMenuInput == "0":
         main()
@@ -367,10 +368,251 @@ def kierownikMenu():
                 print("Wybierz poprawną opcję")
                 
         kierownikProduktyMenu()
+#*KIEROWNIK
+
+#*BRYGADZISTA
+def brygadzistaMenu():
+    print ("\n\nTwoja rola to: Brygadzista\n")
+    brygadzistaMenuInput = input ("""Wybierz akcję:\n 1. Deleguj pracowników\n 2. Aktualizacja postępów produkcji\n 3. Wyświetl rejestr zleceń\n 0. Wstecz\n\n--> """)
+
+    if brygadzistaMenuInput == "0":
+        mainMenu()
         
+    elif brygadzistaMenuInput == "1":
+        id_zamowienie = (input ("Podaj numer ID zlecenia do delegowania pracowników:\n"), )
+        print("Wyświetlam informacje o wybranym zleceniu: \n")
+        mySql_select_record = "SELECT * FROM zamowienia WHERE id_zamowienie = %s"
+        cursor.execute(mySql_select_record, id_zamowienie)
+        record = cursor.fetchall()
+        print(record[0])
+        confirmation = input("\nCzy na pewno chcesz delegować pracowników do tego zamówienia? t/n\n")
         
+        if confirmation == "t":
+            employee_amount = input ("Podaj ilość pracowników do przypisania ich do zlecenia: \n")
+            confirmation2 = input ("Czy wprowadzona ilość pracowników jest poprawna? t/n\n")
+            
+            if confirmation2 == "t":
+                query = "UPDATE zamowienia SET ilosc_pracownik = %s WHERE id_zamowienie = %s"
+                cursor.execute (query, (employee_amount, id_zamowienie[0]), multi = True)
+                connection.commit()
+                print("Nowa ilość pracowników oddeloegowanych do tego zmaówienia to:", employee_amount)
+                
+            elif confirmation2 == "n":
+                print ("Ilość pracowników nie została zmieniona")
+                brygadzistaMenu()
+                
+            else:
+                print ("Wybierz poprawną opcję")
+                brygadzistaMenu()
         
-         
+        elif confirmation == "n":
+            brygadzistaMenu()
+        
+        else:
+            print("Wybierz poprawną opcję")
+            brygadzistaMenu()
+        brygadzistaMenu()
+        
+    elif brygadzistaMenuInput == "2":
+        def brygadzistaAktualizacjaMenu():
+            print("Ta opcja nie została jeszcze zaimplementowana")
+            brygadzistaMenu()
+        brygadzistaAktualizacjaMenu()
+    
+    elif brygadzistaMenuInput == "3":
+        def brygadzistaZamowieniaRegisterMenu():
+            brygadzistaZamowieniaRegisterMenuInput = input (""" 1. Wyświetl wszystkie zasoby (Sortuj: od najstarszego)\n 2. Wyświetl wszystkie zlecenia (Sortuj: od najnowszego)\n 3. Filtruj: Status\n 0. Wstecz\n\n--> """)
+            if brygadzistaZamowieniaRegisterMenuInput == "0":
+                brygadzistaMenu()
+                
+            elif brygadzistaZamowieniaRegisterMenuInput == "3":
+                def brygadzistaZamowieniaRegisterFilterMenu():
+                    brygadzistaZamowieniaRegisterFilterMenuInput = int (input ("""Wybierz status do wyświetlenia:\n 1. Zrealizowane\n 2. W toku\n 3. Oczekujące\n 4. Opóźnione\n 5. Archiwalne\n\n-->"""))
+                    mySql_filter = ("""SELECT * FROM zamowienia WHERE status = %s""")
+                    print("\n\n")
+                    cursor.execute(mySql_filter, (brygadzistaZamowieniaRegisterFilterMenuInput,))
+                    rows = cursor.fetchall()
+                    result = len(rows)
+                    if result > 0:
+                        x = 0
+                        for row in rows:
+                            row = rows[x]
+                            print (row)
+                            x = x + 1
+                    print("\n\n")
+                    brygadzistaZamowieniaRegisterMenu()
+                brygadzistaZamowieniaRegisterFilterMenu()
+                
+            elif brygadzistaZamowieniaRegisterMenuInput == "2":
+                print("\n\n")
+                query = ("SELECT * FROM zamowienia ORDER BY data_zamow")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                brygadzistaZamowieniaRegisterMenu()
+                
+            elif brygadzistaZamowieniaRegisterMenuInput == "1":
+                print("\n\n")
+                query = ("SELECT * FROM zamowienia ORDER BY data_zamow DESC")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                brygadzistaZamowieniaRegisterMenu()
+                
+            else:
+                print ("Wybierz poprawną opcję")        
+                brygadzistaZamowieniaRegisterMenu()
+                
+        brygadzistaZamowieniaRegisterMenu()    
+#*BRYGADZISTA
+
+#*MAGAZYNIER
+def magazynierMenu():
+    print ("\n\nTwoja rola to: Magazynier\n")
+    magazynierMenuInput = input ("""Wybierz akcję:\n 1. Wyświetl stany magazynowe\n 2. Dodaj zasób\n 3. Modyfikuj zasób\n 0. Wstecz\n\n--> """)
+    
+    if magazynierMenuInput == "0":
+        mainMenu()
+        
+    elif magazynierMenuInput == "1":
+        def magazynierZasobyRegisterMenu():
+            magazynierZasobyRegisterMenuInput = input (""" 1. Wyświetl wszystkie zlecenia (Sortuj: od najstarszego)\n 2. Wyświetl wszystkie zlecenia (Sortuj: od najnowszego)\n 3. Filtruj: Status\n 4. Filtruj: ID Produktu\n 0. Wstecz\n\n--> """)
+            if magazynierZasobyRegisterMenuInput == "0":
+                magazynierMenu()
+             
+            elif magazynierZasobyRegisterMenuInput == "4":
+                    magazynierZasobyRegisterFilterMenuInput = int (input ("""Podaj ID produktu\n\n-->"""))
+                    mySql_filter = ("""SELECT * FROM magazyn WHERE id_produkt = %s""")
+                    print("\n\n")
+                    cursor.execute(mySql_filter, (magazynierZasobyRegisterFilterMenuInput,))
+                    rows = cursor.fetchall()
+                    result = len(rows)
+                    if result > 0:
+                        x = 0
+                        for row in rows:
+                            row = rows[x]
+                            print (row)
+                            x = x + 1
+                    print("\n\n")
+                    magazynierZasobyRegisterMenu()
+                
+            elif magazynierZasobyRegisterMenuInput == "3":
+                def magazynierZasobyRegisterFilterMenu():
+                    magazynierZasobyRegisterFilterMenuInput = int (input ("""Wybierz status do wyświetlenia:\n 1. Zapas\n 2. Zarezerwowany\n 3. Niedostępny\n\n-->"""))
+                    mySql_filter = ("""SELECT * FROM magazyn WHERE status = %s""")
+                    print("\n\n")
+                    cursor.execute(mySql_filter, (magazynierZasobyRegisterFilterMenuInput,))
+                    rows = cursor.fetchall()
+                    result = len(rows)
+                    if result > 0:
+                        x = 0
+                        for row in rows:
+                            row = rows[x]
+                            print (row)
+                            x = x + 1
+                    print("\n\n")
+                    magazynierZasobyRegisterMenu()
+                magazynierZasobyRegisterFilterMenu()
+                
+            elif magazynierZasobyRegisterMenuInput == "2":
+                print("\n\n")
+                query = ("SELECT * FROM magazyn ORDER BY data_produkcji")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                magazynierZasobyRegisterMenu()
+                
+            elif magazynierZasobyRegisterMenuInput == "1":
+                print("\n\n")
+                query = ("SELECT * FROM magazyn ORDER BY data_produkcji DESC")
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                result = len(rows)
+                if result > 0:
+                    x = 0
+                    for row in rows:
+                        row = rows[x]
+                        print (row)
+                        x = x + 1
+                print("\n\n")
+                magazynierZasobyRegisterMenu()
+                
+            else:
+                print ("Wybierz poprawną opcję")        
+                magazynierZasobyRegisterMenu()    
+        magazynierZasobyRegisterMenu()    
+
+    elif magazynierMenuInput == "2":
+        id_produkt = input ("id_produkt:\n-->")
+        ilosc = input ("ilosc:\n-->")
+        data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n-->")
+        id_zamowienie = input ("id_zamowienie (może pozostać puste):\n-->")
+        status = input ("status: (domyślny 1. Wolny)\n-->")
+        mySql_insert_record = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
+        cursor.execute(mySql_insert_record, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
+        connection.commit()
+        print("Zasób został pomyślnie dodany do magazynu\n")
+        magazynierMenu()
+
+    elif kierownikProduktyMenuInput == "3":
+        id_zasob = (input ("Podaj numer ID zasobu do edycji:\n"), )
+        print("Wyświetlam obecne dane o zasobie:\n")
+        mySql_select_record = "SELECT * FROM magazyn WHERE id_zasob = %s"
+        cursor.execute(mySql_select_record, id_zasob)
+        record = cursor.fetchall()
+        print(record[0])
+        confirmation = input("Czy napewno chcesz modyfikować ten zasob? t/n \n")
+                    
+        if confirmation == "t":
+            print("Podaj nowe wartości zasobu: \n")
+            id_produkt = input ("id_produkt:\n-->")
+            ilosc = input ("ilosc:\n-->")
+            data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n-->")
+            id_zamowienie = input ("id_zamowienie (może pozostać puste):\n-->")
+            status = input ("status: ()\n-->")
+            mySql_update_record = ("""UPDATE magazyn SET id_produkt = %s, ilosc = %s, data_produkcji = %s, id_zamowienie = %s, status = %s WHERE id_produkt = %s""")
+            cursor.execute(mySql_update_record, (id_produkt, ilosc, data_produkcji, id_zamowienie, status),multi = True)
+            connection.commit() 
+            print("Rekord został pomyślnie edytowany\n")
+            kierownikProduktyMenu()
+                        
+        elif confirmation == "n":
+            print ("Rekord nie został edytowany\n")
+            kierownikProduktyMenu()
+            
+        else:
+            print("Wybierz poprawną opcję")
+            kierownikProduktyMenu()
+    magazynierMenu()
+#*MAGAZYNIER
+
+#*KADROWY
+
+
+
+#*KADROWY
+
 #! SKŁADNIA JOIN
 ##def program(action):
 ##    if action == 1:
