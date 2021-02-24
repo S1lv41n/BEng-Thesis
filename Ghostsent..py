@@ -1,5 +1,6 @@
 import sys
 import mysql.connector
+import datetime
 
 connection = mysql.connector.connect(host='localhost',
                                     database='inżynierka', 
@@ -100,19 +101,14 @@ def handlowiecMenu():
                         x = x + 1
                 print("\n\n")
                 handlowiecRegisterMenu()
-                
+            
+            #! IMPORTANT DATA IN HUMAN READABLE FORMAT :D    
             elif handlowiecRegisterMenuInput == "1":
                 print("\n\n")
                 query = ("SELECT * FROM zamowienia ORDER BY data_zamow DESC")
                 cursor.execute(query)
-                rows = cursor.fetchall()
-                result = len(rows)
-                if result > 0:
-                    x = 0
-                    for row in rows:
-                        row = rows[x]
-                        print(row)
-                        x = x + 1
+                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
+                    print("{} {} {} {:%d %b %Y} {:%d %b %Y} {} {} {} {}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
                 print("\n\n")
                 handlowiecRegisterMenu()
                 
