@@ -43,7 +43,7 @@ def welcome():
     print("\n\nWersja serwera MySQL:", db_info)
     cursor.execute("select database();")
     record = cursor.fetchone()
-    print ("\nWitaj w aplikacji Ghostsent.")
+    print("\nWitaj w aplikacji Ghostsent.")
 
 
 def mainMenu():
@@ -80,7 +80,7 @@ def handlowiecMenu():
                         x = 0
                         for row in rows:
                             row = rows[x]
-                            print (row)
+                            print(row)
                             x = x + 1
                     print("\n\n")
                     handlowiecRegisterMenu()
@@ -96,7 +96,7 @@ def handlowiecMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 handlowiecRegisterMenu()
@@ -111,13 +111,13 @@ def handlowiecMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 handlowiecRegisterMenu()
                 
             else:
-                print ("Wybierz poprawną opcję")        
+                print("Wybierz poprawną opcję")        
 
         handlowiecRegisterMenu()
         
@@ -147,7 +147,7 @@ def handlowiecMenu():
 
 #*KIEROWNIK
 def kierownikMenu():
-    print ("\nTwoja rola to: Kierownik\n")
+    print("\nTwoja rola to: Kierownik\n")
     kierownikMenuInput = input ("""Wybierz akcję:\n 1. Rejestr zleceń\n 2. Rejestr produktów\n 0. Wstecz\n\n❯ """)
     if kierownikMenuInput == "0":
         main()
@@ -177,7 +177,7 @@ def kierownikMenu():
                                 x = 0
                                 for row in rows:
                                     row = rows[x]
-                                    print (row)
+                                    print(row)
                                     x = x + 1
                             print("\n\n")
                             kierownikZamowieniaRegisterMenu()
@@ -193,7 +193,7 @@ def kierownikMenu():
                             x = 0
                             for row in rows:
                                 row = rows[x]
-                                print (row)
+                                print(row)
                                 x = x + 1
                         print("\n\n")
                         kierownikZamowieniaRegisterMenu()
@@ -208,13 +208,13 @@ def kierownikMenu():
                             x = 0
                             for row in rows:
                                 row = rows[x]
-                                print (row)
+                                print(row)
                                 x = x + 1
                         print("\n\n")
                         kierownikZamowieniaRegisterMenu()
 
                     else:
-                        print ("Wybierz poprawną opcję")        
+                        print("Wybierz poprawną opcję")        
 
                 kierownikZamowieniaRegisterMenu()
 
@@ -264,7 +264,7 @@ def kierownikMenu():
                             x = 0
                             for row in rows:
                                 row = rows[x]
-                                print (row)
+                                print(row)
                                 x = x + 1
                         print("\n\n")
                         kierownikProduktyRegisterMenu()
@@ -280,7 +280,7 @@ def kierownikMenu():
                             x = 0
                             for row in rows:
                                 row = rows[x]
-                                print (row)
+                                print(row)
                                 x = x + 1
                         print("\n\n")
                         kierownikProduktyRegisterMenu()
@@ -295,13 +295,13 @@ def kierownikMenu():
                             x = 0
                             for row in rows:
                                 row = rows[x]
-                                print (row)
+                                print(row)
                                 x = x + 1
                         print("\n\n")
                         kierownikProduktyRegisterMenu()
 
                     else:
-                        print ("Wybierz poprawną opcję")        
+                        print("Wybierz poprawną opcję")        
 
                 kierownikProduktyRegisterMenu()
 
@@ -339,7 +339,7 @@ def kierownikMenu():
                     kierownikProduktyMenu()
                         
                 if confirmation == "n":
-                    print ("Rekord nie został edytowany\n")
+                    print("Rekord nie został edytowany\n")
                     kierownikProduktyMenu()
             
             elif kierownikProduktyMenuInput == "4":
@@ -363,11 +363,11 @@ def kierownikMenu():
                     kierownikProduktyMenu()
 
                 elif confirmation == "n":
-                    print ("Produkt nie został usunięty\n")
+                    print("Produkt nie został usunięty\n")
                     kierownikProduktyMenu()
                     
                 else:
-                    print ("Podaj poprawną opcję")
+                    print("Podaj poprawną opcję")
                     kierownikProduktyMenu()
             
             else:
@@ -378,7 +378,7 @@ def kierownikMenu():
 
 #*BRYGADZISTA
 def brygadzistaMenu():
-    print ("\nTwoja rola to: Brygadzista\n")
+    print("\nTwoja rola to: Brygadzista\n")
     brygadzistaMenuInput = input ("""Wybierz akcję:\n 1. Deleguj pracowników\n 2. Aktualizacja postępów produkcji\n 3. Wyświetl rejestr zleceń\n 0. Wstecz\n\n❯ """)
 
     if brygadzistaMenuInput == "0":
@@ -404,11 +404,11 @@ def brygadzistaMenu():
                 print("Nowa ilość pracowników oddeloegowanych do tego zmaówienia to:", employee_amount)
                 
             elif confirmation2 == "n":
-                print ("Ilość pracowników nie została zmieniona")
+                print("Ilość pracowników nie została zmieniona")
                 brygadzistaMenu()
                 
             else:
-                print ("Wybierz poprawną opcję")
+                print("Wybierz poprawną opcję")
                 brygadzistaMenu()
         
         elif confirmation == "n":
@@ -444,7 +444,7 @@ def brygadzistaMenu():
                         x = 0
                         for row in rows:
                             row = rows[x]
-                            print (row)
+                            print(row)
                             x = x + 1
                     print("\n\n")
                     brygadzistaZamowieniaRegisterMenu()
@@ -460,7 +460,7 @@ def brygadzistaMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 brygadzistaZamowieniaRegisterMenu()
@@ -475,20 +475,20 @@ def brygadzistaMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 brygadzistaZamowieniaRegisterMenu()
                 
             else:
-                print ("Wybierz poprawną opcję")        
+                print("Wybierz poprawną opcję")        
                 brygadzistaZamowieniaRegisterMenu()
         brygadzistaZamowieniaRegisterMenu()
 #*BRYGADZISTA
 
 #*MAGAZYNIER
 def magazynierMenu():
-    print ("\nTwoja rola to: Magazynier\n")
+    print("\nTwoja rola to: Magazynier\n")
     magazynierMenuInput = input ("""Wybierz akcję:\n 1. Wyświetl stany magazynowe\n 2. Dodaj zasób\n 3. Modyfikuj zasób\n 0. Wstecz\n\n❯ """)
     
     if magazynierMenuInput == "0":
@@ -511,7 +511,7 @@ def magazynierMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
@@ -528,7 +528,7 @@ def magazynierMenu():
                         x = 0
                         for row in rows:
                             row = rows[x]
-                            print (row)
+                            print(row)
                             x = x + 1
                     print("\n\n")
                     magazynierZasobyRegisterMenu()
@@ -544,7 +544,7 @@ def magazynierMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
@@ -559,13 +559,13 @@ def magazynierMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
                 
             else:
-                print ("Wybierz poprawną opcję")        
+                print("Wybierz poprawną opcję")        
                 magazynierZasobyRegisterMenu()    
         magazynierZasobyRegisterMenu()    
 
@@ -604,7 +604,7 @@ def magazynierMenu():
             magazynierMenu()
                         
         elif confirmation == "n":
-            print ("Rekord nie został edytowany\n")
+            print("Rekord nie został edytowany\n")
             magazynierMenu()
             
         else:
@@ -614,7 +614,7 @@ def magazynierMenu():
 
 #*KADROWY
 def kadrowyMenu():
-    print ("\nTwoja rola to: Kadrowy\n")
+    print("\nTwoja rola to: Kadrowy\n")
     kadrowyMenuInput = input("Wybierz opcję:\n 1. Wyświetl spis pracowników\n 2. Dodaj pracownika\n 3. Edytuj pracownika\n 4. Usuń pracownika\n 0. Wstecz\n\n❯ ")
     
     if kadrowyMenuInput == "0":
@@ -637,7 +637,7 @@ def kadrowyMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 kadrowyPracownicyMenu()
@@ -652,7 +652,7 @@ def kadrowyMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 kadrowyPracownicyMenu()
@@ -687,11 +687,11 @@ def kadrowyMenu():
             kadrowyMenu()
                 
         elif confirmation == "n":
-            print ("Pracownik nie został edytowany\n")
+            print("Pracownik nie został edytowany\n")
             kadrowyMenu()
         
         else:
-            print ("Wybierz poprawną opcję")
+            print("Wybierz poprawną opcję")
             kadrowyMenu()
             
     elif kadrowyMenuInput == "4":
@@ -714,7 +714,7 @@ def kadrowyMenu():
             kadrowyMenu()
             
         elif confirmation == "n":
-            print ("Pracownik nie został usunięty\n")
+            print("Pracownik nie został usunięty\n")
             kadrowyMenu()
     
         else:
@@ -749,7 +749,7 @@ def zarzadMenu():
                         x = 0
                         for row in rows:
                             row = rows[x]
-                            print (row)
+                            print(row)
                             x = x + 1
                     print("\n\n")
                 zarzadZleceniaFilterMenu()
@@ -764,7 +764,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 
@@ -778,12 +778,12 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
             
             else:
-                print ("Wybierz poprawną opcję")
+                print("Wybierz poprawną opcję")
             zarzadZleceniaMenu()
         zarzadZleceniaMenu()
     
@@ -804,7 +804,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadProduktyMenu()
@@ -819,7 +819,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadProduktyMenu()
@@ -834,7 +834,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadProduktyMenu()
@@ -857,7 +857,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadMagazynMenu()
@@ -872,7 +872,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadMagazynMenu()
@@ -889,7 +889,7 @@ def zarzadMenu():
                         x = 0
                         for row in rows:
                             row = rows[x]
-                            print (row)
+                            print(row)
                             x = x + 1
                     print("\n\n")
                     zarzadMagazynMenu()
@@ -906,7 +906,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadMagazynMenu()
@@ -933,7 +933,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadPracownicyMenu()
@@ -948,7 +948,7 @@ def zarzadMenu():
                     x = 0
                     for row in rows:
                         row = rows[x]
-                        print (row)
+                        print(row)
                         x = x + 1
                 print("\n\n")
                 zarzadPracownicyMenu()
@@ -959,7 +959,7 @@ def zarzadMenu():
         zarzadPracownicyMenu()
         
     elif zarzadMenuInput == "5":
-        print ("Ta opcja nie została jeszcze zaimplementowana")
+        print("Ta opcja nie została jeszcze zaimplementowana")
 #*ZARZĄD
 
 #! SKŁADNIA JOIN
@@ -970,13 +970,13 @@ def zarzadMenu():
 #        cursor.execute(query)
 #        rows = cursor.fetchall()
 #        result = len(rows)
-#        print ("PROD_ID  NAZWA  NORMA/H   ILOŚĆ ")
+#        print("PROD_ID  NAZWA  NORMA/H   ILOŚĆ ")
 #        if result > 0:
 #            x = 0
 #            for row in rows:
 #                row = rows[x]
 #                prod_id, nazwa, norma = row[0], row[0], row[0]
-#                print (row)
+#                print(row)
 #                x = x + 1
 #        print("\n\n")
 
