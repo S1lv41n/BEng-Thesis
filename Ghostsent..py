@@ -108,7 +108,7 @@ def handlowiecMenu():
                 query = ("SELECT * FROM zamowienia ORDER BY data_zamow DESC")
                 cursor.execute(query)
                 for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{} {} {} {:%d %b %Y} {:%d %b %Y} {} {} {} {}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                    print("{} |{} |{} |{:%d %b %Y} |{:%d %b %Y} |{} |{} |{} |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
                 print("\n\n")
                 handlowiecRegisterMenu()
                 
