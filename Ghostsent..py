@@ -110,8 +110,8 @@ def handlowiecMenu():
     elif handlowiecMenuInput == "2":
         id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n❯ "), )
         print("Wyświetlam obecną datę realizacji zlecenia: \n")
-        mySql_select_record = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
-        cursor.execute(mySql_select_record, id_zamowienie)
+        query = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
+        cursor.execute(query, id_zamowienie)
         record = cursor.fetchone()
         print(record[0])
         new_date = input("\nPoprawny format daty to RRRR-MM-DD\n❯ ")
@@ -269,8 +269,8 @@ def kierownikMenu():
                 norma = input ("norma:\n❯ ")
                 jm = input ("jm:\n❯ ")
                 technologia = input ("technologia:\n❯ ")
-                mySql_insert_record = """INSERT INTO produkty (nazwa, norma, jm, technologia)VALUES (%s, %s, %s, %s)"""
-                cursor.execute(mySql_insert_record, (nazwa,  norma, jm, technologia), multi=True)
+                query = """INSERT INTO produkty (nazwa, norma, jm, technologia)VALUES (%s, %s, %s, %s)"""
+                cursor.execute(query, (nazwa,  norma, jm, technologia), multi=True)
                 connection.commit()
                 print("Rekord został pomyślnie dodany do tabeli Produkty\n")
                 kierownikProduktyMenu()
@@ -279,8 +279,8 @@ def kierownikMenu():
                 id_produkt = (input ("Podaj numer ID produktu do edycji:\n❯ "), )
                 print("Wyświetlam obecne dane produktu:\n")
                 print("ID   |NAZWA         |NORMA/H        |JM         |TECHNOLOGIA")
-                mySql_select_record = "SELECT * FROM produkty WHERE id_produkt = %s"
-                cursor.execute(mySql_select_record, id_produkt)
+                query = "SELECT * FROM produkty WHERE id_produkt = %s"
+                cursor.execute(query, id_produkt)
                 record = cursor.fetchone()
                 print("{}    |{}     |{}           |{}         |{}".format(record[0], record[1], record[2], record[3], record[4]))
                 confirmation = input("Czy napewno chcesz edytować ten produkt? t/n\n❯ ")
@@ -447,28 +447,24 @@ def magazynierMenu():
              
             elif magazynierZasobyRegisterMenuInput == "4":
                 magazynierZasobyRegisterFilterMenuInput = int (input ("""Podaj ID produktu\n\n❯ """))
-                mySql_filter = ("""SELECT * FROM magazyn WHERE id_produkt = %s""")
+                query = ("""SELECT * FROM magazyn WHERE id_produkt = %s""")
                 print("\n\n")
-                cursor.execute(mySql_filter, (magazynierZasobyRegisterFilterMenuInput,))
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
+                cursor.execute(query, (magazynierZasobyRegisterFilterMenuInput,))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
                 
             elif magazynierZasobyRegisterMenuInput == "3":
                 def magazynierZasobyRegisterFilterMenu():
                     magazynierZasobyRegisterFilterMenuInput = int (input ("""Wybierz status do wyświetlenia:\n 1. Zapas\n 2. Zarezerwowany\n 3. Niedostępny\n\n❯ """))
-                    mySql_filter = ("""SELECT * FROM magazyn WHERE status = %s""")
+                    query = ("""SELECT * FROM magazyn WHERE status = %s""")
                     print("\n\n")
-                    cursor.execute(mySql_filter, (magazynierZasobyRegisterFilterMenuInput,))
-                    rows = cursor.fetchall()
-                    result = len(rows)
-                    if result > 0:
-                        x = 0
-                        for row in rows:
-                            row = rows[x]
-                            print(row)
-                            x = x + 1
+                    print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
+                    cursor.execute(query, (magazynierZasobyRegisterFilterMenuInput,))
+                    for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                        print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                     print("\n\n")
                     magazynierZasobyRegisterMenu()
                 magazynierZasobyRegisterFilterMenu()
@@ -476,20 +472,20 @@ def magazynierMenu():
             elif magazynierZasobyRegisterMenuInput == "2":
                 print("\n\n")
                 query = ("SELECT * FROM magazyn ORDER BY data_produkcji")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
                 
             elif magazynierZasobyRegisterMenuInput == "1":
                 print("\n\n")
                 query = ("SELECT * FROM magazyn ORDER BY data_produkcji DESC")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                 print("\n\n")
                 magazynierZasobyRegisterMenu()
                 
@@ -504,19 +500,20 @@ def magazynierMenu():
         data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
         id_zamowienie = input ("id_zamowienie (może pozostać puste):\n❯ ")
         status = input ("status: (domyślny 1. Wolny)\n❯ ")
-        mySql_insert_record = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
-        cursor.execute(mySql_insert_record, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
+        query = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
+        cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
         connection.commit()
         print("Zasób został pomyślnie dodany do magazynu\n")
         magazynierMenu()
 
-    elif magazynierProduktyMenuInput == "3":
+    elif magazynierMenuInput == "3":
         id_zasob = (input ("Podaj numer ID zasobu do edycji:\n❯ "), )
         print("Wyświetlam obecne dane o zasobie:\n")
-        mySql_select_record = "SELECT * FROM magazyn WHERE id_zasob = %s"
-        cursor.execute(mySql_select_record, id_zasob)
-        record = cursor.fetchall()
-        print(record[0])
+        print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
+        query = "SELECT * FROM magazyn WHERE id_zasob = %s"
+        cursor.execute(query, id_zasob)
+        record = cursor.fetchone()
+        print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(record[0], record[1], record[2], record[3], record[4], record[5]))
         confirmation = input("Czy napewno chcesz modyfikować ten zasob? t/n\n❯ ")
                     
         if confirmation == "t":
@@ -526,8 +523,8 @@ def magazynierMenu():
             data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
             id_zamowienie = input ("id_zamowienie (może pozostać puste):\n❯ ")
             status = input ("status: ()\n❯ ")
-            mySql_update_record = ("""UPDATE magazyn SET id_produkt = %s, ilosc = %s, data_produkcji = %s, id_zamowienie = %s, status = %s WHERE id_produkt = %s""")
-            cursor.execute(mySql_update_record, (id_produkt, ilosc, data_produkcji, id_zamowienie, status),multi = True)
+            query = ("""UPDATE magazyn SET id_produkt = %s, ilosc = %s, data_produkcji = %s, id_zamowienie = %s, status = %s WHERE id_produkt = %s""")
+            cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status),multi = True)
             connection.commit() 
             print("Rekord został pomyślnie edytowany\n")
             magazynierMenu()
