@@ -656,17 +656,11 @@ def zarzadMenu():
             elif zarzadZleceniaMenuInput == "3":
                 def zarzadZleceniaFilterMenu():
                     zarzadZleceniaFilterMenuInput = int (input ("""Wybierz status do wyświetlenia:\n 1. Zrealizowane\n 2. W toku\n 3. Oczekujące\n 4. Opóźnione\n 5. Archiwalne\n\n❯"""))
-                    mySql_filter = ("""SELECT * FROM zamowienia WHERE status = %s""")
-                    print("\n\n")
-                    cursor.execute(mySql_filter, (zarzadZleceniaFilterMenuInput,))
-                    rows = cursor.fetchall()
-                    result = len(rows)
-                    if result > 0:
-                        x = 0
-                        for row in rows:
-                            row = rows[x]
-                            print(row)
-                            x = x + 1
+                    query = ("""SELECT * FROM zamowienia WHERE status = %s""")
+                    print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                    cursor.execute(query, (zarzadZleceniaFilterMenuInput,))
+                    for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
+                        print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
                     print("\n\n")
                 zarzadZleceniaFilterMenu()
                 
@@ -702,38 +696,38 @@ def zarzadMenu():
                 
             elif zarzadProduktyMenuInput == "1":
                 print("\n\n")
+                print("ID   |NAZWA         |NORMA/H        |JM         |TECHNOLOGIA")
                 query = ("SELECT * FROM produkty ORDER BY id_produkt")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_produkt, nazwa, norma, jm, technologia) in cursor:
+                    print("{}    |{}     |{}           |{}         |{}".format(id_produkt, nazwa, norma, jm, technologia))
                 print("\n\n")
                 zarzadProduktyMenu()
                 
             elif zarzadProduktyMenuInput == "2":
                 print("\n\n")
+                print("ID   |NAZWA         |NORMA/H        |JM         |TECHNOLOGIA")
                 query = ("SELECT * FROM produkty ORDER BY nazwa")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_produkt, nazwa, norma, jm, technologia) in cursor:
+                    print("{}    |{}     |{}           |{}         |{}".format(id_produkt, nazwa, norma, jm, technologia))
                 print("\n\n")
                 zarzadProduktyMenu()
                 
             elif zarzadProduktyMenuInput == "3":
                 print("\n\n")
                 query = ("SELECT * FROM produkty ORDER BY nazwa DESC")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID   |NAZWA         |NORMA/H        |JM         |TECHNOLOGIA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_produkt, nazwa, norma, jm, technologia) in cursor:
+                    print("{}    |{}     |{}           |{}         |{}".format(id_produkt, nazwa, norma, jm, technologia))
                 print("\n\n")
                 zarzadProduktyMenu()
         zarzadProduktyMenu()
         
     elif zarzadMenuInput == "3":
         def zarzadMagazynMenu():
-            zarzadMagazynMenuInput = input(""" 1. Wyświetl wszystkie stany magazynowe (Sortuj: od najstarszego)\n 2. Wyświetl wszystkie stany magazynowe (Sortuj: od najnowszego)\n 3. Filtruj: Status\n 4. Filtruj: ID Produktu\n 0. Wstecz\n\n❯ """)
+            zarzadMagazynMenuInput = input(""" 1. Wyświetl stany magazynowe (Sortuj: od najstarszego)\n 2. Wyświetl stany magazynowe (Sortuj: od najnowszego)\n 3. Filtruj: Status\n 4. Filtruj: ID Produktu\n 0. Wstecz\n\n❯ """)
             
             if zarzadMagazynMenuInput == "0":
                 zarzadMenu()
@@ -741,48 +735,45 @@ def zarzadMenu():
             elif zarzadMagazynMenuInput == "1":
                 print("\n\n")
                 query = ("SELECT * FROM magazyn ORDER BY data_produkcji")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                 print("\n\n")
                 zarzadMagazynMenu()
         
             elif zarzadMagazynMenuInput == "2":
                 print("\n\n")
                 query = ("SELECT * FROM magazyn ORDER BY data_produkcji DESC")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                 print("\n\n")
                 zarzadMagazynMenu()
                 
             elif zarzadMagazynMenuInput == "3":
                 def zarzadMagazynFilterMenu():
                     zarzadMagazynFilterMenuInput = int (input ("""Wybierz status do wyświetlenia:\n 1. Zapas\n 2. Zarezerwowany\n 3. Niedostępny\n\n❯ """))
-                    mySql_filter = ("""SELECT * FROM magazyn WHERE status = %s""")
+                    query = ("""SELECT * FROM magazyn WHERE status = %s""")
                     print("\n\n")
-                    cursor.execute(mySql_filter, (zarzadMagazynFilterMenuInput,))
-                    rows = cursor.fetchall()
-                    result = len(rows)
-                    if result > 0:
-                        x = 0
-                        for row in rows:
-                            row = rows[x]
-                            print(row)
-                            x = x + 1
+                    print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
+                    cursor.execute(query, (zarzadMagazynFilterMenuInput,))
+                    for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                        print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
                     print("\n\n")
                     zarzadMagazynMenu()
                 zarzadMagazynFilterMenu()
                 
             elif zarzadMagazynMenuInput == "4":                
                 zarzadMagazynRegisterFilterMenuInput = int (input ("""Podaj ID produktu\n\n❯"""))
-                mySql_filter = ("""SELECT * FROM magazyn WHERE id_produkt = %s""")
+                query = ("""SELECT * FROM magazyn WHERE id_produkt = %s""")
                 print("\n\n")
-                cursor.execute(mySql_filter, (zarzadMagazynRegisterFilterMenuInput,))
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
+                cursor.execute(query, (zarzadMagazynRegisterFilterMenuInput,))
+                for (id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status) in cursor:
+                    print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(id_zasob, id_produkt, ilosc, data_produkcji, id_zamowienie, status))
+                print("\n\n")
                 print("\n\n")
                 zarzadMagazynMenu()
                 
@@ -801,20 +792,20 @@ def zarzadMenu():
             elif zarzadPracownicyMenuInput == "1":
                 print("\n\n")
                 query = ("SELECT * FROM pracownicy ORDER BY id_pracownik")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |IMIĘ       |NAZWISKO    |ROLA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_pracownik, imie, nazwisko, rola) in cursor:
+                    print("{}     |{}     |{}    |{}".format(id_pracownik, imie, nazwisko, rola))
                 print("\n\n")
                 zarzadPracownicyMenu()
                 
             elif zarzadPracownicyMenuInput == "2":
                 print("\n\n")
                 query = ("SELECT * FROM pracownicy ORDER BY nazwisko")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |IMIĘ       |NAZWISKO    |ROLA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_pracownik, imie, nazwisko, rola) in cursor:
+                    print("{}     |{}     |{}    |{}".format(id_pracownik, imie, nazwisko, rola))
                 print("\n\n")
                 zarzadPracownicyMenu()
                 
@@ -824,7 +815,7 @@ def zarzadMenu():
         zarzadPracownicyMenu()
         
     elif zarzadMenuInput == "5":
-        print("Ta opcja nie została jeszcze zaimplementowana")
+        print("Ta opcja nie została jeszcze zaimplementowana\n\n")
 #*ZARZĄD
 
 welcome()            
