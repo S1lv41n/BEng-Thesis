@@ -1,3 +1,4 @@
+#!/usr/bin/python3.8
 import sys
 import mysql.connector
 import datetime
@@ -498,8 +499,8 @@ def magazynierMenu():
         id_produkt = input ("id_produkt:\n❯ ")
         ilosc = input ("ilosc:\n❯ ")
         data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
-        id_zamowienie = input ("id_zamowienie (może pozostać puste):\n❯ ")
-        status = input ("status: (domyślny 1. Wolny)\n❯ ")
+        id_zamowienie = input ("id_zamowienie:\n❯ ")
+        status = input ("status:\n❯ ")
         query = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
         cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
         connection.commit()
