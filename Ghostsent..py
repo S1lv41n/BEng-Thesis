@@ -556,29 +556,29 @@ def kadrowyMenu():
             elif kadrowyPracownicyMenuInput == "1":
                 print("\n\n")
                 query = ("SELECT * FROM pracownicy ORDER BY id_pracownik")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |IMIĘ       |NAZWISKO    |ROLA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_pracownik, imie, nazwisko, rola) in cursor:
+                    print("{}     |{}     |{}    |{}".format(id_pracownik, imie, nazwisko, rola))
                 print("\n\n")
                 kadrowyPracownicyMenu()
                 
             elif kadrowyPracownicyMenuInput == "2":
                 print("\n\n")
                 query = ("SELECT * FROM pracownicy ORDER BY nazwisko")
-                print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
+                print("ID    |IMIĘ       |NAZWISKO    |ROLA")
                 cursor.execute(query)
-                for (id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient) in cursor:
-                    print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(id_zamowienie, id_produkt, ilosc_zamow, data_zamow, data_realizacji, ilosc_pracownik, wewnetrzne, status, id_klient))
+                for (id_pracownik, imie, nazwisko, rola) in cursor:
+                    print("{}     |{}     |{}    |{}".format(id_pracownik, imie, nazwisko, rola))
                 print("\n\n")
                 kadrowyPracownicyMenu()
         kadrowyPracownicyMenu()
         
     elif kadrowyMenuInput == "2":
-        imie = input ("imie:\n❯ ")
+        imie = input ("imię:\n❯ ")
         nazwisko = input ("nazwisko:\n❯ ")
-        mySql_insert_record = """INSERT INTO pracownicy (imie, nazwisko)VALUES (%s, %s)"""
-        cursor.execute(mySql_insert_record, (imie, nazwisko), multi=True)
+        query = """INSERT INTO pracownicy (imie, nazwisko)VALUES (%s, %s)"""
+        cursor.execute(query, (imie, nazwisko), multi=True)
         connection.commit()
         print("Pracownik został pomyślnie dodany do spisu pracowników\n")
         kadrowyMenu()
@@ -586,18 +586,19 @@ def kadrowyMenu():
     elif kadrowyMenuInput == "3":
         id_pracownik = (input ("Podaj numer ID pracownika do edycji:\n❯ "), )
         print("Wyświetlam obecne dane pracownika:\n")
-        mySql_select_record = "SELECT * FROM pracownicy WHERE id_pracownik = %s"
-        cursor.execute(mySql_select_record, id_pracownik)
-        record = cursor.fetchall()
-        print(record[0])
+        print("ID    |IMIĘ       |NAZWISKO    |ROLA")
+        query = "SELECT * FROM pracownicy WHERE id_pracownik = %s"
+        cursor.execute(query, id_pracownik)
+        record = cursor.fetchone()
+        print("{}     |{}     |{}    |{}".format(record[0],record[1],record[2],record[3]))
         confirmation = input("Czy napewno chcesz edytować tego pracownika? t/n\n❯ ")
             
         if confirmation == "t":
             print("Podaj nowe dane pracownika: \n")
             imie = input("imie:\n❯ ")
             nazwisko = input("nazwisko:\n❯ ")
-            mySql_update_record = ("""UPDATE pracownicy SET imie = %s, nazwisko = %s WHERE id_pracownik = %s""")
-            cursor.execute(mySql_update_record, (imie, nazwisko, id_pracownik[0]),multi = True)
+            query = ("""UPDATE pracownicy SET imie = %s, nazwisko = %s WHERE id_pracownik = %s""")
+            cursor.execute(query, (imie, nazwisko, id_pracownik[0]),multi = True)
             connection.commit() 
             print("Pracownik został pomyślnie edytowany\n")
             kadrowyMenu()
@@ -613,12 +614,11 @@ def kadrowyMenu():
     elif kadrowyMenuInput == "4":
         id_pracownik = (input("Podaj ID pracownika do usunięcia:\n❯ "), )
         print("Wyświetlam informację o pracowniku przed jego usunięciem: ")
-        mySql_select_record = """SELECT * 
-                            FROM pracownicy
-                            WHERE id_pracownik = %s"""
-        cursor.execute(mySql_select_record, id_pracownik)
-        record = cursor.fetchall()
-        print(record)
+        print("ID    |IMIĘ       |NAZWISKO    |ROLA")
+        query = """SELECT * FROM pracownicy WHERE id_pracownik = %s"""
+        cursor.execute(query, id_pracownik)
+        record = cursor.fetchone()
+        print("{}     |{}     |{}    |{}".format(record[0],record[1],record[2],record[3]))
         confirmation = input("Czy napewno chcesz usunąć tego pracownika? t/n\n❯ ")
         
         if confirmation == "t":
