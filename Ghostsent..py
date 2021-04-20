@@ -1,14 +1,13 @@
-#!/usr/bin/python3.8
 import sys
 import mysql.connector
 import datetime
 
 connection = mysql.connector.connect(host='localhost',
-                                    database='inżynierka', 
+                                    database='praca_inżynierska', 
                                     user='s1lv41n', 
                                     password='S1lv41nftw!', 
                                     auth_plugin='mysql_native_password')
-cursor = connection.cursor()
+cursor = connection.cursor(buffered=True)
 
 
 def main():    
@@ -44,7 +43,7 @@ def welcome():
     db_info = connection.get_server_info()
     print("\n\nWersja serwera MySQL:", db_info)
     cursor.execute("select database();")
-    record = cursor.fetchone()
+    #record = cursor.fetchone()
     print("\nWitaj w aplikacji Ghostsent.")
 
 
@@ -119,7 +118,7 @@ def handlowiecMenu():
         print("\nNowa data realizacji zlecenia to:", new_date)
         selection = input("Potwierdzasz? t/n\n❯")
         if selection == "t":
-            query = "UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s"
+            query = ("UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s")
             cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
             connection.commit()
             
@@ -255,7 +254,7 @@ def kierownikMenu():
                         print("ID   |NAZWA         |NORMA/H        |JM         |TECHNOLOGIA")
                         query = ("SELECT * FROM produkty ORDER BY nazwa DESC")
                         cursor.execute(query)
-                        for (id_prdukt, nazwa, norma, jm, technologia) in cursor:
+                        for (id_produkt, nazwa, norma, jm, technologia) in cursor:
                                 print("{}    |{}     |{}           |{}         |{}".format(id_produkt, nazwa, norma, jm, technologia))
                         print("\n\n")
                         kierownikProduktyRegisterMenu()
@@ -270,7 +269,7 @@ def kierownikMenu():
                 norma = input ("norma:\n❯ ")
                 jm = input ("jm:\n❯ ")
                 technologia = input ("technologia:\n❯ ")
-                query = """INSERT INTO produkty (nazwa, norma, jm, technologia)VALUES (%s, %s, %s, %s)"""
+                query = """INSERT INTO produkty (nazwa, norma, jm, technologia) VALUES (%s, %s, %s, %s)"""
                 cursor.execute(query, (nazwa,  norma, jm, technologia), multi=True)
                 connection.commit()
                 print("Rekord został pomyślnie dodany do tabeli Produkty\n")
