@@ -4,8 +4,8 @@ import datetime
 
 connection = mysql.connector.connect(host='localhost',
                                     database='praca_inżynierska', 
-                                    user='s1lv41n', 
-                                    password='S1lv41nftw!', 
+                                    user='ghostsent', 
+                                    password='ghostsent', 
                                     auth_plugin='mysql_native_password')
 cursor = connection.cursor(buffered=True)
 
