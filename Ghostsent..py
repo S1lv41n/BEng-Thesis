@@ -118,9 +118,21 @@ def handlowiecMenu():
         print("\nNowa data realizacji zlecenia to:", new_date)
         selection = input("Potwierdzasz? t/n\n❯")
         if selection == "t":
+<<<<<<< Updated upstream
             query = "UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s"
             cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
             connection.commit()
+=======
+            try:
+                query = ("UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s")
+                cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
+                connection.commit()
+                handlowiecMenu()
+            
+            except:
+                print("Podaj poprawne dane!")
+                handlowiecMenu()                
+>>>>>>> Stashed changes
             
         elif selection == "n":
             print("\nData realizacji nie została zaktualizowana")
