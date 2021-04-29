@@ -39,11 +39,10 @@ def main():
     main()
 
 
-def welcome():
+def welcomeScreen():
     db_info = connection.get_server_info()
     print("\n\nWersja serwera MySQL:", db_info)
     cursor.execute("select database();")
-    #record = cursor.fetchone()
     print("\nWitaj w aplikacji Ghostsent.")
 
 
@@ -108,27 +107,37 @@ def handlowiecMenu():
         handlowiecRegisterMenu()
         
     elif handlowiecMenuInput == "2":
-        id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n❯ "), )
-        print("Wyświetlam obecną datę realizacji zlecenia: \n")
-        query = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
-        cursor.execute(query, id_zamowienie)
-        record = cursor.fetchone()
-        print(record[0])
-        new_date = input("\nPoprawny format daty to RRRR-MM-DD\n❯ ")
-        print("\nNowa data realizacji zlecenia to:", new_date)
-        selection = input("Potwierdzasz? t/n\n❯")
-        if selection == "t":
-            query = ("UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s")
-            cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
-            connection.commit()
-            
-        elif selection == "n":
-            print("\nData realizacji nie została zaktualizowana")
+        try:
+            id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n❯ "), )
+            query = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
+            cursor.execute(query, id_zamowienie)
+            record = cursor.fetchone()
+            print("Wyświeltam obecną datę realizacji zlecenia:\n",record[0])
+            new_date = input("\nPoprawny format daty to RRRR-MM-DD\n❯ ")
+            print("\nNowa data realizacji zlecenia to:", new_date)
+            selection = input("Potwierdzasz? t/n\n❯")
+            if selection == "t":
+                try:
+                    query = ("UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s")
+                    cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
+                    connection.commit()
+
+                except:
+                    print("Podaj datę w poprawnym formacie!\n")
+                    handlowiecMenu()
+
+            elif selection == "n":
+                print("\nData realizacji nie została zaktualizowana")
+                handlowiecMenu()
+
+            else:
+                print("\nWybierz poprawną opcję!")            
+                handlowiecMenu()
+                
+        except:
+            print("Podaj poprawne ID zamówienia!\n")
             handlowiecMenu()
             
-        else:
-            print("\nWybierz poprawną opcję")            
-            handlowiecMenu()
 #*HANDLOWIEC
 
 #*KIEROWNIK
@@ -190,23 +199,32 @@ def kierownikMenu():
                 kierownikZamowieniaRegisterMenu()
 
             elif kierownikZamowieniaMenuInput == "2":
-                id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n"), )
-                print("Wyświetlam obecną datę realizacji zlecenia:\n")
-                query = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
-                cursor.execute(query, id_zamowienie)
-                record = cursor.fetchone()
-                print(record[0])
-                new_date = input("\nPoprawny format daty to RRRR-MM-DD\n❯ ")
-                print("Nowa data realizacji zlecenia to:", new_date)
-                selection = input("Potwierdzasz? t/n\n❯ ")
-                if selection == "t":
-                    query = "UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s"
-                    cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
-                    connection.commit()
-                    kierownikZamowieniaMenu()
+                try:
+                    id_zamowienie = (input ("Podaj numer ID zlecenia do edycji daty realizacji:\n"), )
+                    query = "SELECT data_realizacji FROM zamowienia WHERE id_zamowienie = %s"
+                    cursor.execute(query, id_zamowienie)
+                    record = cursor.fetchone()
+                    print("Wyświeltam obecną datę realizacji zlecenia:\n",record[0])
+                    new_date = input("\nPoprawny format daty to RRRR-MM-DD\n❯ ")
+                    print("Nowa data realizacji zlecenia to:", new_date)
+                    selection = input("Potwierdzasz? t/n\n❯ ")
+                    if selection == "t":
+                        try:
+                            query = "UPDATE zamowienia SET data_realizacji = %s WHERE id_zamowienie = %s"
+                            cursor.execute (query, (new_date, id_zamowienie[0]), multi = True)
+                            connection.commit()
+                            kierownikZamowieniaMenu()
 
-                elif selection == "n":
-                    print("Data realizacji nie została zaktualizowana\n")
+                        except:
+                            print("Podaj datę w poprawnym formacie!\n")
+                            kierownikZamowieniaMenu()
+    
+                    elif selection == "n":
+                        print("Data realizacji nie została zaktualizowana\n")
+                        kierownikZamowieniaMenu()
+                        
+                except:
+                    print("Podaj poprawne ID zamówienia!")
                     kierownikZamowieniaMenu()
 
             else:
@@ -265,15 +283,20 @@ def kierownikMenu():
                 kierownikProduktyRegisterMenu()
 
             elif kierownikProduktyMenuInput == "2":
-                nazwa = input ("nazwa:\n❯ ")
-                norma = input ("norma:\n❯ ")
-                jm = input ("jm:\n❯ ")
-                technologia = input ("technologia:\n❯ ")
-                query = """INSERT INTO produkty (nazwa, norma, jm, technologia) VALUES (%s, %s, %s, %s)"""
-                cursor.execute(query, (nazwa,  norma, jm, technologia), multi=True)
-                connection.commit()
-                print("Rekord został pomyślnie dodany do tabeli Produkty\n")
-                kierownikProduktyMenu()
+                try:
+                    nazwa = input ("nazwa:\n❯ ")
+                    norma = input ("norma:\n❯ ")
+                    jm = input ("jm:\n❯ ")
+                    technologia = input ("technologia:\n❯ ")
+                    query = """INSERT INTO produkty (nazwa, norma, jm, technologia) VALUES (%s, %s, %s, %s)"""
+                    cursor.execute(query, (nazwa,  norma, jm, technologia), multi=True)
+                    connection.commit()
+                    print("Rekord został pomyślnie dodany do tabeli Produkty\n")
+                    kierownikProduktyMenu()
+                    
+                except:
+                    print("Podaj odpowiednie dane!\n")
+                    kierownikProduktyMenu()
 
             elif kierownikProduktyMenuInput == "3":
                 id_produkt = (input ("Podaj numer ID produktu do edycji:\n❯ "), )
@@ -286,18 +309,22 @@ def kierownikMenu():
                 confirmation = input("Czy napewno chcesz edytować ten produkt? t/n\n❯ ")
                     
                 if confirmation == "t":
-                    print("Podaj nowe wartości rekordu:\n")
-                    nazwa = input("nazwa:\n❯ ")
-                    norma = input("norma:\n❯ ")
-                    jm = input("jm: ")
-                    technologia = input("technologia: ")
-                    id = id_produkt
-                    mySql_update_record = ("""UPDATE produkty SET nazwa = %s, norma = %s, jm = %s, technologia = %s WHERE id_produkt = %s""")
-                    cursor.execute(mySql_update_record, (nazwa, norma, jm, technologia, id[0]),multi = True)
-                    connection.commit() 
-                    print("Rekord został pomyślnie edytowany\n")
-                    kierownikProduktyMenu()
+                    try:
+                        print("Podaj nowe wartości rekordu:\n")
+                        nazwa = input("nazwa:\n❯ ")
+                        norma = input("norma:\n❯ ")
+                        jm = input("jm: ")
+                        technologia = input("technologia: ")
+                        id = id_produkt
+                        mySql_update_record = ("""UPDATE produkty SET nazwa = %s, norma = %s, jm = %s, technologia = %s WHERE id_produkt = %s""")
+                        cursor.execute(mySql_update_record, (nazwa, norma, jm, technologia, id[0]),multi = True)
+                        connection.commit() 
+                        print("Rekord został pomyślnie edytowany\n")
+                        kierownikProduktyMenu()
                         
+                    except:
+                        print("Podaj odpowiednie dane!")
+                    
                 if confirmation == "n":
                     print("Rekord nie został edytowany\n")
                     kierownikProduktyMenu()
@@ -314,12 +341,15 @@ def kierownikMenu():
                 confirmation = input("Czy napewno chcesz usunąć ten produkt? t/n\n❯ ")
 
                 if confirmation == "t":
-                    mySql_delete_record = """DELETE from produkty 
-                                        WHERE id_produkt = %s"""
-                    cursor.execute(mySql_delete_record, id_produkt)
-                    connection.commit()
-                    print("Produkt został pomyślnie usunięty\n")
-                    kierownikProduktyMenu()
+                    try:
+                        mySql_delete_record = """DELETE from produkty WHERE id_produkt = %s"""
+                        cursor.execute(mySql_delete_record, id_produkt)
+                        connection.commit()
+                        print("Produkt został pomyślnie usunięty\n")
+                        kierownikProduktyMenu()
+                        
+                    except:
+                        print("Podaj poprawne ID produktu!")
 
                 elif confirmation == "n":
                     print("Produkt nie został usunięty\n")
@@ -344,40 +374,48 @@ def brygadzistaMenu():
         mainMenu()
         
     elif brygadzistaMenuInput == "1":
-        id_zamowienie = (input ("Podaj numer ID zlecenia do delegowania pracowników:\n❯ "), )
-        print("Wyświetlam informacje o wybranym zleceniu: \n")
-        print("ID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA")
-        query = "SELECT * FROM zamowienia WHERE id_zamowienie = %s"
-        cursor.execute(query, id_zamowienie)
-        record = cursor.fetchone()
-        print("{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(record[0], record[1], record[2], record[3], record[4], record[5], record[6], record[7], record[8]))
-        confirmation = input("\nCzy na pewno chcesz delegować pracowników do tego zamówienia? t/n\n❯ ")
-        
-        if confirmation == "t":
-            employee_amount = input ("Podaj ilość pracowników do przypisania ich do zlecenia:\n❯ ")
-            confirmation2 = input ("Czy wprowadzona ilość pracowników jest poprawna? t/n\n❯ ")
-            
-            if confirmation2 == "t":
-                query = "UPDATE zamowienia SET ilosc_pracownik = %s WHERE id_zamowienie = %s"
-                cursor.execute (query, (employee_amount, id_zamowienie[0]), multi = True)
-                connection.commit()
-                print("Nowa ilość pracowników oddeloegowanych do tego zmaówienia to:", employee_amount)
-                
-            elif confirmation2 == "n":
-                print("Ilość pracowników nie została zmieniona")
+        try:
+            id_zamowienie = (input ("Podaj numer ID zlecenia do delegowania pracowników:\n❯ "), )
+            query = "SELECT * FROM zamowienia WHERE id_zamowienie = %s"
+            cursor.execute(query, id_zamowienie)
+            record = cursor.fetchone()
+            print("Wyświetlam informacje o wybranym zleceniu: \nID    |PRODUKT    |ILOŚĆ    |DATA ZAMÓWIENIA    |DATA REALIZACJI    |ILOŚĆ PRAC.    |WEWNĘTRZNE    |STATUS    |ID KLIENTA\n{}     |{}          |{}     |{:%d %b %Y}        |{:%d %b %Y}        |{}              |{}             |{}         |{}".format(record[0], record[1], record[2], record[3], record[4], record[5], record[6], record[7], record[8]))
+            confirmation = input("\nCzy na pewno chcesz delegować pracowników do tego zamówienia? t/n\n❯ ")
+
+            if confirmation == "t":
+                employee_amount = input ("Podaj ilość pracowników do przypisania ich do zlecenia:\n❯ ")
+                confirmation2 = input ("Czy wprowadzona ilość pracowników jest poprawna? t/n\n❯ ")
+
+                if confirmation2 == "t":
+                    try:
+                        query = "UPDATE zamowienia SET ilosc_pracownik = %s WHERE id_zamowienie = %s"
+                        cursor.execute (query, (employee_amount, id_zamowienie[0]), multi = True)
+                        connection.commit()
+                        print("Nowa ilość pracowników oddeloegowanych do tego zmaówienia to:", employee_amount)
+
+                    except:
+                        print("Podaj poprawną ilość pracowników!")
+                        brygadzistaMenu()
+
+                elif confirmation2 == "n":
+                    print("Ilość pracowników nie została zmieniona")
+                    brygadzistaMenu()
+
+                else:
+                    print("Wybierz poprawną opcję")
+                    brygadzistaMenu()
+
+            elif confirmation == "n":
                 brygadzistaMenu()
-                
+
             else:
                 print("Wybierz poprawną opcję")
                 brygadzistaMenu()
-        
-        elif confirmation == "n":
             brygadzistaMenu()
-        
-        else:
-            print("Wybierz poprawną opcję")
+            
+        except:
+            print("Podaj poprawne ID zlecenia!")
             brygadzistaMenu()
-        brygadzistaMenu()
         
     elif brygadzistaMenuInput == "2":
         def brygadzistaAktualizacjaMenu():
@@ -495,46 +533,59 @@ def magazynierMenu():
         magazynierZasobyRegisterMenu()    
 
     elif magazynierMenuInput == "2":
-        id_produkt = input ("id_produkt:\n❯ ")
-        ilosc = input ("ilosc:\n❯ ")
-        data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
-        id_zamowienie = input ("id_zamowienie:\n❯ ")
-        status = input ("status:\n❯ ")
-        query = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
-        cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
-        connection.commit()
-        print("Zasób został pomyślnie dodany do magazynu\n")
-        magazynierMenu()
-
-    elif magazynierMenuInput == "3":
-        id_zasob = (input ("Podaj numer ID zasobu do edycji:\n❯ "), )
-        print("Wyświetlam obecne dane o zasobie:\n")
-        print("ID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS")
-        query = "SELECT * FROM magazyn WHERE id_zasob = %s"
-        cursor.execute(query, id_zasob)
-        record = cursor.fetchone()
-        print("{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(record[0], record[1], record[2], record[3], record[4], record[5]))
-        confirmation = input("Czy napewno chcesz modyfikować ten zasob? t/n\n❯ ")
-                    
-        if confirmation == "t":
-            print("Podaj nowe wartości zasobu:\n❯ ")
+        try:
             id_produkt = input ("id_produkt:\n❯ ")
             ilosc = input ("ilosc:\n❯ ")
             data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
-            id_zamowienie = input ("id_zamowienie (może pozostać puste):\n❯ ")
-            status = input ("status: ()\n❯ ")
-            query = ("""UPDATE magazyn SET id_produkt = %s, ilosc = %s, data_produkcji = %s, id_zamowienie = %s, status = %s WHERE id_produkt = %s""")
-            cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status),multi = True)
-            connection.commit() 
-            print("Rekord został pomyślnie edytowany\n")
+            id_zamowienie = input ("id_zamowienie:\n❯ ")
+            status = input ("status:\n❯ ")
+            query = """INSERT INTO magazyn (id_produkt, ilosc, data_produkcji, id_zamowienie, status) VALUES (%s, %s, %s, %s, %s)"""
+            cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status), multi=True)
+            connection.commit()
+            print("Zasób został pomyślnie dodany do magazynu\n")
             magazynierMenu()
-                        
-        elif confirmation == "n":
-            print("Rekord nie został edytowany\n")
+        
+        except:
+            print("Podaj odpowiednie dane!")
             magazynierMenu()
+
+    elif magazynierMenuInput == "3":
+        try:
+            id_zasob = (input ("Podaj numer ID zasobu do edycji:\n❯ "), )
+            query = "SELECT * FROM magazyn WHERE id_zasob = %s"
+            cursor.execute(query, id_zasob)
+            record = cursor.fetchone()
+            print("Wyświetlam obecne dane o zasobie:\nID    |PRODUKT    |ILOŚĆ    |DATA PRODUKCJI     |ID ZAMÓWIENIA    |STATUS\n{}     |{}          |{}     |{:%d %b %Y}        |{}                |{}".format(record[0], record[1], record[2], record[3], record[4], record[5]))
+            confirmation = input("Czy napewno chcesz modyfikować ten zasob? t/n\n❯ ")
+
+            if confirmation == "t":
+                try:
+                    print("Podaj nowe wartości zasobu:\n❯ ")
+                    id_produkt = input ("id_produkt:\n❯ ")
+                    ilosc = input ("ilosc:\n❯ ")
+                    data_produkcji = input ("data produkcji (poprawny format daty to RRRR-MM-DD):\n❯ ")
+                    id_zamowienie = input ("id_zamowienie (może pozostać puste):\n❯ ")
+                    status = input ("status:\n❯ ")
+                    query = ("""UPDATE magazyn SET id_produkt = %s, ilosc = %s, data_produkcji = %s, id_zamowienie = %s, status = %s WHERE id_produkt = %s""")
+                    cursor.execute(query, (id_produkt, ilosc, data_produkcji, id_zamowienie, status),multi = True)
+                    connection.commit() 
+                    print("Rekord został pomyślnie edytowany\n")
+                    magazynierMenu()
+
+                except:
+                    print("Podaj odpowiednie dane!")
+                    magazynierMenu()
+
+            elif confirmation == "n":
+                print("Rekord nie został edytowany\n")
+                magazynierMenu()
+
+            else:
+                print("Wybierz poprawną opcję")
+                magazynierMenu()
             
-        else:
-            print("Wybierz poprawną opcję")
+        except:
+            print("Podaj poprawne ID zasobu!\n")
             magazynierMenu()
 #*MAGAZYNIER
 
@@ -575,13 +626,18 @@ def kadrowyMenu():
         kadrowyPracownicyMenu()
         
     elif kadrowyMenuInput == "2":
-        imie = input ("imię:\n❯ ")
-        nazwisko = input ("nazwisko:\n❯ ")
-        query = """INSERT INTO pracownicy (imie, nazwisko)VALUES (%s, %s)"""
-        cursor.execute(query, (imie, nazwisko), multi=True)
-        connection.commit()
-        print("Pracownik został pomyślnie dodany do spisu pracowników\n")
-        kadrowyMenu()
+        try:
+            imie = input ("imię:\n❯ ")
+            nazwisko = input ("nazwisko:\n❯ ")
+            query = """INSERT INTO pracownicy (imie, nazwisko)VALUES (%s, %s)"""
+            cursor.execute(query, (imie, nazwisko), multi=True)
+            connection.commit()
+            print("Pracownik został pomyślnie dodany do spisu pracowników\n")
+            kadrowyMenu()
+            
+        except:
+            print("Podaj odpowiednie dane!")
+            kadrowyMenu()
 
     elif kadrowyMenuInput == "3":
         id_pracownik = (input ("Podaj numer ID pracownika do edycji:\n❯ "), )
@@ -594,14 +650,19 @@ def kadrowyMenu():
         confirmation = input("Czy napewno chcesz edytować tego pracownika? t/n\n❯ ")
             
         if confirmation == "t":
-            print("Podaj nowe dane pracownika: \n")
-            imie = input("imie:\n❯ ")
-            nazwisko = input("nazwisko:\n❯ ")
-            query = ("""UPDATE pracownicy SET imie = %s, nazwisko = %s WHERE id_pracownik = %s""")
-            cursor.execute(query, (imie, nazwisko, id_pracownik[0]),multi = True)
-            connection.commit() 
-            print("Pracownik został pomyślnie edytowany\n")
-            kadrowyMenu()
+            try:
+                print("Podaj nowe dane pracownika: \n")
+                imie = input("imie:\n❯ ")
+                nazwisko = input("nazwisko:\n❯ ")
+                query = ("""UPDATE pracownicy SET imie = %s, nazwisko = %s WHERE id_pracownik = %s""")
+                cursor.execute(query, (imie, nazwisko, id_pracownik[0]),multi = True)
+                connection.commit() 
+                print("Pracownik został pomyślnie edytowany\n")
+                kadrowyMenu()
+                
+            except:
+                print("Podaj odpowiednie dane!")
+                kadrowyMenu()
                 
         elif confirmation == "n":
             print("Pracownik nie został edytowany\n")
@@ -622,12 +683,17 @@ def kadrowyMenu():
         confirmation = input("Czy napewno chcesz usunąć tego pracownika? t/n\n❯ ")
         
         if confirmation == "t":
-            mySql_delete_record = """DELETE from pracownicy 
-                                WHERE id_pracownik = %s"""
-            cursor.execute(mySql_delete_record, id_pracownik)
-            connection.commit()
-            print("Pracownik został pomyślnie usunięty\n")
-            kadrowyMenu()
+            try:
+                mySql_delete_record = """DELETE from pracownicy 
+                                    WHERE id_pracownik = %s"""
+                cursor.execute(mySql_delete_record, id_pracownik)
+                connection.commit()
+                print("Pracownik został pomyślnie usunięty\n")
+                kadrowyMenu()
+                
+            except:
+                print("Podaj poprawne ID pracownika!")
+                kadrowyMenu()
             
         elif confirmation == "n":
             print("Pracownik nie został usunięty\n")
@@ -818,5 +884,5 @@ def zarzadMenu():
         print("Ta opcja nie została jeszcze zaimplementowana\n\n")
 #*ZARZĄD
 
-welcome()            
+welcomeScreen()            
 main()
